@@ -1,17 +1,41 @@
 import { galleryItems } from './gallery-items.js';
-// Change code below this line
-let gallery = new SimpleLightbox('.gallery a');
-gallery.on('show.simplelightbox', function () {
-	// do something…
+
+const gallery = document.querySelector(`.gallery`);
+gallery.insertAdjacentHTML('afterbegin', makeGallery(galleryItems));
+gallery.addEventListener(`click`, handlerClick);
+
+const instance = new SimpleLightbox('.gallery a', {
+  captionsDelay: 250,
+  captionPosition: "bottom",
 });
 
-gallery.on('error.simplelightbox', function (e) {
-	console.log(e); // some usefull information
-});
 
-// with jQuery nearly the same
-let gallery = $('.gallery a').simpleLightbox();
-gallery.on('show.simplelightbox', function () {
-	// do something…
-});
-console.log(galleryItems);
+function makeGallery(gallery) {
+    return gallery.map(({preview, original, description}) =>
+        `<li class="gallery__item">
+            <a class="gallery__link" href="${original}">
+    <img
+       class="gallery__image"
+       src="${preview}" 
+       alt="${description}" 
+       title="${description}"
+    />
+            </a>
+</li>`)
+        .join(""); 
+}
+
+function handlerClick(evt) {
+  evt.preventDefault();
+  console.dir(evt.target);
+  console.log(evt.currentTarget === evt.target);
+    if (evt.currentTarget === evt.target) { return; }
+    
+    instance.open(evt.target.parentElement);
+    console.dir(evt.target.parentElement)
+
+}
+
+
+
+// console.log(instance);
